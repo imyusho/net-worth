@@ -15,10 +15,10 @@ export default function Home() {
 
   const [holdings, setHoldings] = useState({
     tw2330Shares: 4800,
-    qqcShares: 5496.0453 + 1153,
+    qqcShares: 5545.2095 + 1153,
     zspShares: 64.8749,
     twd: 180000,
-    cad: 2819 + 6400 + 6000,
+    cad: 819 + 6400 + 6000,
     fx: "22.18",
   });
 
