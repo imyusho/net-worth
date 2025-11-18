@@ -1,65 +1,135 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+
+type Prices = {
+  [symbol: string]: number | null;
+};
 
 export default function Home() {
+  const [prices, setPrices] = useState<Prices>({
+    "2330.TW": null,
+    "QQC.TO": null,
+    "ZSP.TO": null,
+  });
+
+  const [holdings, setHoldings] = useState({
+    tw2330Shares: 4800,
+    qqcShares: 5496.0453 + 1153,
+    zspShares: 64.8749,
+    twd: 180000,
+    cad: 2819 + 6400 + 6000,
+    fx: "22.18",
+  });
+
+  useEffect(() => {
+    async function load() {
+      const res = await fetch("/api/quote?symbols=2330.TW,QQC.TO,ZSP.TO");
+      const data = await res.json();
+      setPrices({
+        "2330.TW": data.prices["2330.TW"],
+        "QQC.TO": data.prices["QQC.TO"],
+        "ZSP.TO": data.prices["ZSP.TO"],
+      });
+    }
+    load();
+  }, []);
+
+  const t2330 = prices["2330.TW"];
+  const tQQC = prices["QQC.TO"];
+  const tZSP = prices["ZSP.TO"];
+  let fxNum = Number(holdings.fx);
+  if (isNaN(fxNum)) fxNum = 0;
+
+  let computedNetworth: number | null = null;
+  if (t2330 !== null && tQQC !== null && tZSP !== null && fxNum > 0) {
+    computedNetworth =
+      holdings.tw2330Shares * t2330 +
+      (holdings.qqcShares * tQQC + holdings.zspShares * tZSP + holdings.cad) *
+        fxNum +
+      holdings.twd;
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="p-6 max-w-xl mx-auto space-y-4">
+      <h1 className="text-2xl font-bold">Net Worth Tracker</h1>
+
+      <h2 className="text-xl font-semibold pt-4">
+        Net Worth :{" "}
+        {computedNetworth !== null
+          ? computedNetworth.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          : "-"}
+      </h2>
+
+      <div className="pt-4 space-y-1">
+        <p>2330.TW price: {prices["2330.TW"] ?? "Loading..."}</p>
+        <p>QQC.TO price: {prices["QQC.TO"] ?? "Loading..."}</p>
+        <p>ZSP.TO price: {prices["ZSP.TO"] ?? "Loading..."}</p>
+      </div>
+
+      <div className="space-y-2">
+        <label>TWD→CAD exchange rate:</label>
+        <input
+          type="number"
+          placeholder="e.g. 0.043"
+          className="border p-2 w-full"
+          value={holdings.fx}
+          onChange={(e) => setHoldings({ ...holdings, fx: e.target.value })}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+        <label>2330.TW shares:</label>
+        <input
+          type="number"
+          className="border p-2 w-full"
+          value={holdings.tw2330Shares}
+          onChange={(e) =>
+            setHoldings({ ...holdings, tw2330Shares: Number(e.target.value) })
+          }
+        />
+
+        <label>QQC.TO shares:</label>
+        <input
+          type="number"
+          className="border p-2 w-full"
+          value={holdings.qqcShares}
+          onChange={(e) =>
+            setHoldings({ ...holdings, qqcShares: Number(e.target.value) })
+          }
+        />
+
+        <label>ZSP.TO shares:</label>
+        <input
+          type="number"
+          className="border p-2 w-full"
+          value={holdings.zspShares}
+          onChange={(e) =>
+            setHoldings({ ...holdings, zspShares: Number(e.target.value) })
+          }
+        />
+
+        <label>TWD cash:</label>
+        <input
+          type="number"
+          className="border p-2 w-full"
+          value={holdings.twd}
+          onChange={(e) =>
+            setHoldings({ ...holdings, twd: Number(e.target.value) })
+          }
+        />
+
+        <label>CAD cash:</label>
+        <input
+          type="number"
+          className="border p-2 w-full"
+          value={holdings.cad}
+          onChange={(e) =>
+            setHoldings({ ...holdings, cad: Number(e.target.value) })
+          }
+        />
+      </div>
     </div>
   );
 }
