@@ -52,17 +52,15 @@ export default function Home() {
 
   return (
     <div className="p-6 max-w-xl mx-auto space-y-4">
-      <h1 className="text-2xl font-bold">Net Worth Tracker</h1>
-
-      <h2 className="text-xl font-semibold pt-4">
-        Net Worth :{" "}
+      <h1 className="text-2xl font-bold">
+        Net Worth: $
         {computedNetworth !== null
           ? computedNetworth.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })
           : "-"}
-      </h2>
+      </h1>
 
       <div className="pt-4 space-y-1">
         <p>2330.TW price: {prices["2330.TW"] ?? "Loading..."}</p>
