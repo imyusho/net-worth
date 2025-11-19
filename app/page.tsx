@@ -16,10 +16,10 @@ export default function Home() {
   const [rate, setRate] = useState<number>();
 
   const [holdings, setHoldings] = useState({
-    tw2330Shares: 4800,
+    tw2330Shares: 4840,
     qqcShares: 5545.2095 + 1153,
     zspShares: 64.8749,
-    twd: 180000,
+    twd: 124000,
     cad: 819 + 6400 + 6000,
   });
 
