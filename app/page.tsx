@@ -13,7 +13,7 @@ export default function Home() {
     "ZSP.TO": null,
   });
 
-  const [rate, setRate] = useState<number>();
+  const [rate, setRate] = useState<number|undefined>(22.28);
 
   const [holdings, setHoldings] = useState({
     tw2330Shares: 4940,
