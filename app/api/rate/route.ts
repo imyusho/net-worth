@@ -18,8 +18,7 @@ export async function GET(req: Request) {
     const dom = new JSDOM(html);
     const document = dom.window.document;
 
-    const raw = document.querySelector('[data-testid="conversion"]')?.firstChild
-      ?.firstChild?.firstChild?.childNodes[1]?.firstChild?.textContent;
+    const raw = document.querySelectorAll(".absolute.w-auto")[1]?.textContent;
 
     if (!raw) throw new Error("Can't find conversion");
 

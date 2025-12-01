@@ -13,7 +13,7 @@ export default function Home() {
     "ZSP.TO": null,
   });
 
-  const [rate, setRate] = useState<number|undefined>(22.28);
+  const [rate, setRate] = useState<number | undefined>();
 
   const [holdings, setHoldings] = useState({
     tw2330Shares: 4940,
@@ -45,11 +45,11 @@ export default function Home() {
   const tZSP = prices["ZSP.TO"];
 
   let computedNetworth: number | null = null;
-  if (t2330 !== null && tQQC !== null && tZSP !== null && rate != null) {
+  if (t2330 !== null && tQQC !== null && tZSP !== null) {
     computedNetworth =
       holdings.tw2330Shares * t2330 +
       (holdings.qqcShares * tQQC + holdings.zspShares * tZSP + holdings.cad) *
-        rate +
+        (rate ?? 22.47) +
       holdings.twd;
   }
 
