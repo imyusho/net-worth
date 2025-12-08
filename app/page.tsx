@@ -23,7 +23,7 @@ export default function Home() {
     tw2330Shares: 4940,
     qqcShares: 5545.2 + 1153,
     zspShares: 64.8749,
-    twd: 40000,
+    twd: 154000,
     cad: 3000 + 6400 + 6000,
   });
 
