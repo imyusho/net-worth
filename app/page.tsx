@@ -20,10 +20,10 @@ export default function Home() {
   const [touchedRate, setTouchedRate] = useState(false);
 
   const [holdings, setHoldings] = useState({
-    tw2330Shares: 4940,
+    tw2330Shares: 5000,
     qqcShares: 5545.2 + 1153,
     zspShares: 64.8749,
-    twd: 154000,
+    twd: 66000,
     cad: 3000 + 6400 + 6000,
   });
 
